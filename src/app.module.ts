@@ -6,6 +6,7 @@ import { PollModule } from './poll/poll.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import * as path from 'node:path';
+import { UserVoteModule } from './user-vote/user-vote.module';
 config();
 @Module({
   imports: [
@@ -24,6 +25,7 @@ config();
       }),
     }),
     PollModule,
+    UserVoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

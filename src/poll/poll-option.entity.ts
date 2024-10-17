@@ -1,8 +1,15 @@
-import { Poll } from './poll.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { PollEntity } from './poll.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { UserVoteEntity } from '../user-vote/user-vote.entity';
 
 @Entity('poll_option')
-export class PollOption {
+export class PollOptionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,6 +19,9 @@ export class PollOption {
   @Column({ default: 0 })
   votes: number;
 
-  @ManyToOne(() => Poll, (poll) => poll.options, { onDelete: 'CASCADE' })
-  poll: Poll;
+  @ManyToOne(() => PollEntity, (poll) => poll.options, { onDelete: 'CASCADE' })
+  poll: PollEntity;
+
+  @OneToMany(() => UserVoteEntity, (userVote) => userVote.pollOption)
+  voteUsers: UserVoteEntity[];
 }

@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PollOption } from './poll-option.entity';
+import { PollOptionEntity } from './poll-option.entity';
 
 @Entity('poll')
-export class Poll {
+export class PollEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => PollOption, (option) => option.poll, { cascade: true })
-  options: PollOption[];
+  @OneToMany(() => PollOptionEntity, (option) => option.poll, { cascade: true })
+  options: PollOptionEntity[];
 }
