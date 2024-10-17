@@ -7,6 +7,7 @@ import {
 import { Server } from 'socket.io';
 import { PollService } from '../poll/poll.service';
 import { CastVoteDto } from '../poll/dto/cast-vote.dto';
+import { BadRequestException } from '@nestjs/common';
 
 @WebSocketGateway(80, { cors: { origin: '*' } })
 export class VoteGateway {
@@ -40,6 +41,11 @@ export class VoteGateway {
   handleVote(
     @MessageBody() data: { pollId: number; optionId: number; userId: number },
   ): void {
+    if (!data.pollId || !data.optionId || !data.userId) {
+      throw new BadRequestException(
+        'Missing required fields: pollId, optionId, or userId',
+      );
+    }
     const dto = new CastVoteDto();
     dto.optionId = data.optionId;
     dto.userId = data.userId;

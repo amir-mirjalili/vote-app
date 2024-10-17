@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PollEntity } from './poll.entity';
@@ -36,14 +36,14 @@ export class PollService {
       relations: ['poll'],
     });
     if (!option || option.poll.id !== pollId) {
-      throw new Error('Invalid option or poll');
+      throw new HttpException('Invalid option or poll', HttpStatus.BAD_REQUEST);
     }
     const checkUserVote = await this.userVoteService.checkUserAlreadyVoted(
       castVoteDto.userId,
       castVoteDto.optionId,
     );
     if (checkUserVote) {
-      throw new Error('User has already voted');
+      throw new HttpException('User has already voted', HttpStatus.CONFLICT);
     }
 
     const userVoteDto = new CreateUserVoteDto();
@@ -53,6 +53,7 @@ export class PollService {
     option.votes += 1;
 
     await this.pollOptionRepository.save(option);
+    return { message: 'vote casted successfully ' };
   }
 
   async getByPollId(pollId: number): Promise<PollEntity> {
